@@ -1,0 +1,26 @@
+npm init
+npm install express
+------------------------------------------------------------
+https://www.npmjs.com/package/nodemon
+
+> npm install --save-dev nodemon //for automatically reload
+
+MySQL DBMS (Database Management System)
+
+
+> npm install mysql2
+-------
+const mysql = require("mysql2/promise");
+
+const db = mysql.createPool({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "full_stack_g8",
+  port: 6306, //3306,
+  namedPlaceholders: true,
+});
+module.exports = db;
+
+// for install
+npm install cors
