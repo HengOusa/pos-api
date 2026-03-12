@@ -1,0 +1,6 @@
+Error: Cannot delete or update a parent row: a foreign key constraint fails (`pos_db`.`products`, CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`))
+Error: Cannot delete or update a parent row: a foreign key constraint fails (`pos_db`.`products`, CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`))
+Error: Cannot delete or update a parent row: a foreign key constraint fails (`pos_db`.`products`, CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`))
+Error: Cannot delete or update a parent row: a foreign key constraint fails (`pos_db`.`products`, CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`))
+Error: Cannot delete or update a parent row: a foreign key constraint fails (`pos_db`.`products`, CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`))
+Error: Cannot delete or update a parent row: a foreign key constraint fails (`pos_db`.`products`, CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`))

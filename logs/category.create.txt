@@ -1,0 +1,43 @@
+Error: connect ETIMEDOUT
+Error: connect ETIMEDOUT
+Error: Column count doesn't match value count at row 1
+Error: Column count doesn't match value count at row 1
+Error: Column count doesn't match value count at row 1
+Error: Column count doesn't match value count at row 1
+Error: Column count doesn't match value count at row 1
+Error: Column count doesn't match value count at row 1
+Error: Column count doesn't match value count at row 1
+Error: Column count doesn't match value count at row 1
+Error: Column count doesn't match value count at row 1
+Error: Column 'created_by' cannot be null
+Error: Column 'created_by' cannot be null
+Error: Column 'created_by' cannot be null
+Error: Column 'created_by' cannot be null
+Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?)' at line 1
+Error: Column 'created_by' cannot be null
+Error: Column 'created_by' cannot be null
+Error: Column 'created_by' cannot be null
+Error: Column 'created_by' cannot be null
+Error: Column 'created_by' cannot be null
+Error: Column 'created_by' cannot be null
+Error: Column count doesn't match value count at row 1
+Error: Column count doesn't match value count at row 1
+Error: Column 'created_by' cannot be null
+Error: Column 'created_by' cannot be null
+Error: Field 'created_by' doesn't have a default value
+Error: Field 'created_by' doesn't have a default value
+Error: Column 'created_by' cannot be null
+Error: Column 'created_by' cannot be null
+Error: Duplicate entry 'Closthing' for key 'categories.name'
+Error: Duplicate entry 'Closthing' for key 'categories.name'
+Error: Duplicate entry 'Closthing' for key 'categories.name'
+Error: Duplicate entry 'Closthing' for key 'categories.name'
+Error: Duplicate entry 'Closthing' for key 'categories.name'
+Error: Duplicate entry 'Closthing' for key 'categories.name'
+Error: Duplicate entry 'Closthing' for key 'categories.name'
+Error: Duplicate entry 'Closthing' for key 'categories.name'
+Error: Duplicate entry 'Closthing' for key 'categories.name'
+Error: Duplicate entry 'Closthing' for key 'categories.name'
+Error: Duplicate entry 'Electronics' for key 'categories.name'
+Error: Duplicate entry 'Electronics' for key 'categories.name'
+Error: Duplicate entry 'Closthing' for key 'categories.name'
