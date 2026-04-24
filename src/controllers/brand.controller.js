@@ -7,9 +7,7 @@ const { db } = require("../util/helper");
 */
 exports.getList = async (req, res) => {
   try {
-    const [brands] = await db.query(
-      "SELECT * FROM brands WHERE is_active = 1 ORDER BY brand_id DESC"
-    );
+    const [brands] = await db.query("SELECT * FROM brands");
 
     res.status(200).json({
       total: brands.length,
@@ -31,10 +29,9 @@ exports.getOne = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const [brand] = await db.query(
-      "SELECT * FROM brands WHERE brand_id = ?",
-      [id]
-    );
+    const [brand] = await db.query("SELECT * FROM brands WHERE brand_id = ?", [
+      id,
+    ]);
 
     if (brand.length === 0) {
       return res.status(404).json({
@@ -64,7 +61,7 @@ exports.create = async (req, res) => {
     const [result] = await db.query(
       `INSERT INTO brands (name, brand_logo, is_active, created_at)
        VALUES (?, ?, 1, NOW())`,
-      [name, brand_logo]
+      [name, brand_logo],
     );
 
     res.status(201).json({
@@ -91,7 +88,7 @@ exports.update = async (req, res) => {
       `UPDATE brands
        SET name = ?, brand_logo = ?
        WHERE brand_id = ?`,
-      [name, brand_logo, id]
+      [name, brand_logo, id],
     );
 
     if (result.affectedRows === 0) {
@@ -123,7 +120,7 @@ exports.destroy = async (req, res) => {
       `UPDATE brands
        SET is_active = 0
        WHERE brand_id = ?`,
-      [id]
+      [id],
     );
 
     if (result.affectedRows === 0) {
@@ -139,5 +136,39 @@ exports.destroy = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ status: "error", message: error.message });
+  }
+};
+
+exports.toggleStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { is_active } = req.body;
+
+    if (typeof is_active !== "number") {
+      return res
+        .status(400)
+        .json({ status: "error", message: "is_active must be 0 or 1" });
+    }
+
+    const [result] = await db.query(
+      "UPDATE brands SET is_active = ? WHERE brand_id = ?",
+      [is_active, id],
+    );
+
+    if (result.affectedRows === 0) {
+      return res
+        .status(404)
+        .json({ status: "error", message: "Brands not found" });
+    }
+
+    res.json({
+      status: "success",
+      message: `Brands status updated to ${is_active === 1 ? "Active" : "Inactive"}`,
+    });
+  } catch (error) {
+    logError("brands.toggleStatus", error, res);
+    res.json({
+      message: error.message,
+    });
   }
 };

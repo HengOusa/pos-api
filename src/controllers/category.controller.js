@@ -3,7 +3,6 @@ const { db, logError } = require("../util/helper");
 // Get all categories
 exports.getList = async (req, res) => {
   try {
-    
     const [categories] = await db.query("SELECT * FROM categories");
     res.status(200).json({
       status: "success",
@@ -47,12 +46,10 @@ exports.show = async (req, res) => {
 // Create a new category
 exports.create = async (req, res) => {
   try {
-    const {
-      name,
-      description,
-      is_active,
-      created_by = req.profile.name,
-    } = req.body;
+    const { name, description, is_active } = req.body;
+
+    const created_by = req.profile?.user_id;
+
     if (!name) {
       return res
         .status(400)
@@ -60,7 +57,7 @@ exports.create = async (req, res) => {
     }
 
     const [result] = await db.query(
-      "INSERT INTO categories (name, description, is_active, created_by ) VALUES (?, ?, ?, ?)",
+      "INSERT INTO categories (name, description, is_active, created_by) VALUES (?, ?, ?, ?)",
       [name, description || null, is_active ?? 1, created_by],
     );
 

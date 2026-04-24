@@ -3,13 +3,13 @@
 const { logError, db } = require("../util/helper");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const config = require("../util/config");
+require("dotenv").config();
 
 // =======================
 // Generate Access Token
 // =======================
 const getAccessToken = (paramData) => {
-  const access_token = jwt.sign({ data: paramData }, config.config.SECRET_KEY, {
+  const access_token = jwt.sign({ data: paramData }, process.env.SECRET_KEY, {
     expiresIn: "1h",
   });
   return access_token;
@@ -205,7 +205,7 @@ exports.validate_token = () => {
         });
       }
 
-      jwt.verify(token, config.config.SECRET_KEY, (error, decoded) => {
+      jwt.verify(token, process.env.SECRET_KEY, (error, decoded) => {
         if (error) {
           return res.status(401).json({
             status: "error",
@@ -224,4 +224,38 @@ exports.validate_token = () => {
       logError("auth.validate_token", error, res);
     }
   };
+};
+
+exports.toggleStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { is_active } = req.body;
+
+    if (typeof is_active !== "number") {
+      return res
+        .status(400)
+        .json({ status: "error", message: "is_active must be 0 or 1" });
+    }
+
+    const [result] = await db.query(
+      "UPDATE users SET is_active = ? WHERE user_id = ?",
+      [is_active, id],
+    );
+
+    if (result.affectedRows === 0) {
+      return res
+        .status(404)
+        .json({ status: "error", message: "User not found" });
+    }
+
+    res.json({
+      status: "success",
+      message: `User status updated to ${is_active === 1 ? "Active" : "Inactive"}`,
+    });
+  } catch (error) {
+    logError("users.toggleStatus", error, res);
+    res.json({
+      message: error.message,
+    });
+  }
 };

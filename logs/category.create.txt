@@ -41,3 +41,16 @@ Error: Duplicate entry 'Closthing' for key 'categories.name'
 Error: Duplicate entry 'Electronics' for key 'categories.name'
 Error: Duplicate entry 'Electronics' for key 'categories.name'
 Error: Duplicate entry 'Closthing' for key 'categories.name'
+Error: Incorrect integer value: 'Heng OuSa' for column 'created_by' at row 1
+Error: Incorrect integer value: 'Heng OuSa' for column 'created_by' at row 1
+TypeError: Cannot read properties of undefined (reading 'name')
+Error: Incorrect integer value: 'Heng OuSa' for column 'created_by' at row 1
+Error: Incorrect integer value: 'Heng OuSa' for column 'created_by' at row 1
+Error: Incorrect integer value: 'Admin User' for column 'created_by' at row 1
+Error: Incorrect integer value: 'Admin User' for column 'created_by' at row 1
+Error: Incorrect integer value: 'Admin User' for column 'created_by' at row 1
+Error: Incorrect integer value: 'Admin User' for column 'created_by' at row 1
+Error: Incorrect integer value: 'Admin User' for column 'created_by' at row 1
+Error: Incorrect integer value: 'Admin User' for column 'created_by' at row 1
+Error: Incorrect integer value: 'Admin User' for column 'created_by' at row 1
+Error: Incorrect integer value: 'Admin User' for column 'created_by' at row 1

@@ -81,6 +81,8 @@ CREATE TABLE suppliers (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+ALTER TABLE suppliers
+ADD COLUMN is_active TINYINT(1) NOT NULL DEFAULT 1;
 -- 5. CATEGORIES, BRANDS, PRODUCTS
 CREATE TABLE categories (
     category_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -103,17 +105,37 @@ CREATE TABLE products (
     category_id INT NOT NULL,
     brand_id INT NOT NULL,
     supplier_id INT NOT NULL,
+    product_image_id INT
     cost_price DECIMAL(10,2),
     selling_price DECIMAL(10,2),
     stock INT DEFAULT 0,
     reorder_level INT DEFAULT 0,
-    image VARCHAR(255) DEFAULT NULL,
     created_by VARCHAR(100) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
     FOREIGN KEY (category_id) REFERENCES categories(category_id),
     FOREIGN KEY (brand_id) REFERENCES brands(brand_id),
-    FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id)
+    FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id),
+    FOREIGN KEY (product_image_id) REFERENCES product_images(product_image_id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (created_by) REFERENCES users(user_id)
+);
+
+ALTER TABLE products
+ADD COLUMN is_active TINYINT(1) NOT NULL DEFAULT 1 AFTER reorder_level;
+-- ALTER TABLE products
+-- ADD COLUMN product_image_id INT,
+-- ADD CONSTRAINT fk_product_image_id
+--     FOREIGN KEY (product_image_id) REFERENCES product_images(product_image_id)
+--     ON DELETE SET NULL
+--     ON UPDATE CASCADE;
+
+CREATE TABLE product_images(
+    product_image_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    image VARCHAR(255) NOT NULL,
+
+    FOREIGN KEY (product_id) REFERENCES products(product_id)
 );
 
 CREATE TABLE product_variants (
@@ -155,12 +177,17 @@ CREATE TABLE purchases (
     total_amount DECIMAL(10,2),
     purchase_date DATETIME,
     status ENUM('pending','completed','cancelled'),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    approved_at DATETIME,
+    approved_by INT,
+    
     FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (approved_by) REFERENCES users(user_id)
 );
 
 CREATE TABLE purchase_items (
-    purchase_item_id INT AUTO_INCREMENT PRIMARY KEY,
+    -- purchase_item_id INT AUTO_INCREMENT PRIMARY KEY,
     purchase_id INT,
     product_id INT,
     quantity INT,
@@ -187,7 +214,7 @@ CREATE TABLE sales (
 );
 
 CREATE TABLE sale_items (
-    sale_item_id INT AUTO_INCREMENT PRIMARY KEY,
+    -- sale_item_id INT AUTO_INCREMENT PRIMARY KEY,
     sale_id INT,
     product_id INT,
     variant_id INT,
@@ -204,7 +231,7 @@ CREATE TABLE payments (
     payment_id INT AUTO_INCREMENT PRIMARY KEY,
     sale_id INT,
     amount DECIMAL(10,2),
-    payment_method ENUM('cash','card','mobile','bank_transfer'),
+    payment_method ENUM('cash','card','bakong_qr'),
     payment_date DATETIME,
     FOREIGN KEY (sale_id) REFERENCES sales(sale_id)
 );
@@ -247,7 +274,8 @@ CREATE TABLE promotions (
     value DECIMAL(10,2),
     start_date DATETIME,
     end_date DATETIME,
-    status TINYINT DEFAULT 1
+    status TINYINT DEFAULT 1,
+    created_by 
 );
 
 CREATE TABLE promotion_products (
@@ -261,15 +289,17 @@ CREATE TABLE promotion_products (
 -- 12. EMPLOYEES & PAYROLL
 CREATE TABLE employees (
     employee_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100),
-    email VARCHAR(100),
-    phone VARCHAR(20),
-    address TEXT,
-    role_id INT,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    phone VARCHAR(20) NOT NULL,
+    address TEXT NOT NULL,
+    role_id INT NOT NULL,
     hire_date DATE,
     salary DECIMAL(10,2),
     status ENUM('active','inactive'),
-    FOREIGN KEY (role_id) REFERENCES roles(role_id)
+    created_by INT,
+    FOREIGN KEY (role_id) REFERENCES roles(role_id),
+    FOREIGN KEY (created_by) REFERENCES users(user_id)
 );
 
 CREATE TABLE payroll (

@@ -9,4 +9,5 @@ module.exports = (app) => {
     AuthController.validate_token(),
     AuthController.profile,
   );
+  app.patch("/api/users/:id/status", AuthController.toggleStatus);
 };

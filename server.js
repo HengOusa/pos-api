@@ -3,10 +3,16 @@ const app = express();
 const cors = require("cors");
 const { db } = require("./src/util/helper");
 const PORT = 3000;
+require("dotenv").config();
 
 app.use(express.json());
 app.use(cors({ origin: "*" }));
 app.use(express.urlencoded({ extended: false }));
+// Serve static files
+app.use(
+  "/products",
+  express.static(process.env.IMAGE_PATH + "/products")
+);
 
 app.get("/api/home", (req, res) => {
   const data = [
@@ -46,6 +52,14 @@ app.get("/api/home", (req, res) => {
 require("./src/routes/category.route")(app);
 require("./src/routes/auth.route")(app);
 require("./src/routes/brand.route")(app);
+require("./src/routes/role.route")(app);
+require("./src/routes/customer.route")(app);
+require("./src/routes/product.route")(app);
+require("./src/routes/supplier.route")(app);
+require("./src/routes/product_variant.route")(app);
+require("./src/routes/loyalty_point.route")(app);
+require("./src/routes/config.route")(app);
+require("./src/routes/employee.route")(app);
 app.listen(PORT, () => {
   console.log(`Server start running at http://localhost:${PORT}`);
 });
