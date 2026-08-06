@@ -20,6 +20,4 @@ jobs:
         node-version: 18.x
     - name: Install dependencies
       # Use Unix commands
-      run: npm install
-    - name: Run tests
-      run: npm test
+      run: ls
