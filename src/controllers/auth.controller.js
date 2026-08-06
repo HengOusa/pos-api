@@ -226,6 +226,148 @@ exports.validate_token = () => {
   };
 };
 
+// =======================
+// Get Single User
+// =======================
+exports.getUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const sql = `
+      SELECT 
+        u.*, 
+        r.name as role_name
+      FROM users u
+      INNER JOIN roles r ON u.role_id = r.role_id
+      WHERE u.user_id = ?
+    `;
+
+    const [rows] = await db.query(sql, [id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({
+        status: "error",
+        message: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      user: rows[0],
+      message: "User retrieved successfully",
+    });
+  } catch (error) {
+    logError("auth.getUser", error, res);
+  }
+};
+
+// =======================
+// Update User
+// =======================
+exports.updateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      name,
+      email,
+      phone_number,
+      date_of_birth,
+      role_id,
+      is_active,
+      address,
+      password,
+    } = req.body;
+
+    // Check if user exists
+    const [existingUser] = await db.query(
+      "SELECT user_id FROM users WHERE user_id = ?",
+      [id],
+    );
+
+    if (existingUser.length === 0) {
+      return res.status(404).json({
+        status: "error",
+        message: "User not found",
+      });
+    }
+
+    // Build update query dynamically
+    let updateFields = [];
+    let updateValues = [];
+
+    if (name !== undefined) {
+      updateFields.push("name = ?");
+      updateValues.push(name);
+    }
+
+    if (email !== undefined) {
+      updateFields.push("email = ?");
+      updateValues.push(email);
+    }
+
+    if (phone_number !== undefined) {
+      updateFields.push("phone_number = ?");
+      updateValues.push(phone_number);
+    }
+
+    if (date_of_birth !== undefined) {
+      updateFields.push("date_of_birth = ?");
+      updateValues.push(date_of_birth);
+    }
+
+    if (role_id !== undefined) {
+      updateFields.push("role_id = ?");
+      updateValues.push(role_id);
+    }
+
+    if (is_active !== undefined) {
+      updateFields.push("is_active = ?");
+      updateValues.push(is_active);
+    }
+
+    if (address !== undefined) {
+      updateFields.push("address = ?");
+      updateValues.push(address);
+    }
+
+    // Handle password update
+    if (password && password.trim()) {
+      const hashedPassword = bcrypt.hashSync(password, 10);
+      updateFields.push("password = ?");
+      updateValues.push(hashedPassword);
+    }
+
+    // Handle image if uploaded
+    if (req.file) {
+      updateFields.push("image = ?");
+      updateValues.push(req.file.filename);
+    }
+
+    // Add user_id for WHERE clause
+    updateValues.push(id);
+
+    if (updateFields.length > 0) {
+      const sql = `
+        UPDATE users 
+        SET ${updateFields.join(", ")}
+        WHERE user_id = ?
+      `;
+
+      await db.query(sql, updateValues);
+    }
+
+    res.status(200).json({
+      status: "success",
+      message: "User updated successfully",
+    });
+  } catch (error) {
+    logError("auth.updateUser", error, res);
+  }
+};
+
+// =======================
+// Toggle User Status
+// =======================
 exports.toggleStatus = async (req, res) => {
   try {
     const { id } = req.params;

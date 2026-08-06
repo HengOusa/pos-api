@@ -1,3 +1,6 @@
 TypeError: Cannot destructure property 'name' of 'req.body' as it is undefined.
 Error: Column 'email' cannot be null
 Error: Duplicate entry 'heng@gmail.com' for key 'users.email'
+TypeError: Cannot destructure property 'name' of 'req.body' as it is undefined.
+TypeError: Cannot destructure property 'name' of 'req.body' as it is undefined.
+TypeError: Cannot destructure property 'name' of 'req.body' as it is undefined.

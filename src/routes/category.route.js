@@ -12,7 +12,9 @@ module.exports = (app) => {
     CategoryController.create,
   );
   app.put("/api/categories/:id", CategoryController.update);
+
   app.get("/api/categories/:id", CategoryController.show);
+  
   app.delete("/api/categories/:id", CategoryController.destroy);
   // Toggle status route
   app.patch("/api/categories/:id/status", CategoryController.toggleStatus);

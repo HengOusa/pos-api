@@ -1,4 +1,4 @@
-const SupplierController = require("../controllers/supplier.contoller");
+const SupplierController = require("../controllers/supplier.controller");
 module.exports = (app) => {
   app.get("/api/suppliers", SupplierController.getList);
   app.get("/api/suppliers/:id", SupplierController.getOne);

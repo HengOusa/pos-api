@@ -46,12 +46,14 @@ CREATE TABLE users (
 -- 3. CUSTOMERS & LOYALTY
 CREATE TABLE customers (
     customer_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100),
-    email VARCHAR(100),
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(200) NOT NULL,
     phone VARCHAR(20),
     gender ENUM('Male','Female','Other'),
     address TEXT,
     loyalty_points INT DEFAULT 0,
+    profile VARCHAR(200),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -291,13 +293,17 @@ CREATE TABLE employees (
     employee_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
     phone VARCHAR(20) NOT NULL,
     address TEXT NOT NULL,
     role_id INT NOT NULL,
     hire_date DATE,
     salary DECIMAL(10,2),
     status ENUM('active','inactive'),
+    is_active TINYINT DEFAULT 1,
+    `image` VARCHAR(255) DEFAULT NULL,
     created_by INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (role_id) REFERENCES roles(role_id),
     FOREIGN KEY (created_by) REFERENCES users(user_id)
 );

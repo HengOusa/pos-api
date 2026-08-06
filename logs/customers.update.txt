@@ -1,0 +1,11 @@
+Error: Unknown column 'updated_at' in 'field list'
+Error: Unknown column 'updated_at' in 'field list'
+Error: Unknown column 'updated_at' in 'field list'
+Error: Unknown column 'updated_at' in 'field list'
+Error: Unknown column 'updated_at' in 'field list'
+Error: Unknown column 'updated_at' in 'field list'
+Error: Unknown column 'updated_at' in 'field list'
+Error: Unknown column 'updated_at' in 'field list'
+Error: Unknown column 'updated_at' in 'field list'
+Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE customer_id = '1'' at line 9
+Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE customer_id = '1'' at line 9

@@ -4,7 +4,7 @@ const path = require("path");
 const fs = require("fs");
 
 // ==============================
-// 📁 MULTER CONFIG
+// MULTER CONFIG
 // ==============================
 const IMAGE_DIR = "public/products";
 
@@ -45,12 +45,22 @@ exports.uploadMiddleware = upload.single("image");
 // ==============================
 const deleteImage = (filename) => {
   if (!filename) return;
-  const fullPath = path.join(IMAGE_DIR, filename);
+  // Handle both full path (products/filename) and just filename
+  const relativePath = filename.replace(/^products\//, '');
+  const fullPath = path.join(IMAGE_DIR, relativePath);
   if (fs.existsSync(fullPath)) {
     fs.unlink(fullPath, (err) => {
       if (err) console.log("Delete error:", err.message);
     });
   }
+};
+
+// ==============================
+// HELPER TO GET PATH WITH PRODUCTS/ PREFIX
+// ==============================
+const getProductImagePath = (filename) => {
+  if (!filename) return null;
+  return `products/${filename}`;
 };
 
 // ==============================
@@ -71,7 +81,7 @@ exports.getList = async (req, res) => {
 };
 
 // ==============================
-// 📥 GET ONE PRODUCT
+//  GET ONE PRODUCT
 // ==============================
 exports.getOne = async (req, res) => {
   try {
@@ -89,7 +99,7 @@ exports.getOne = async (req, res) => {
       });
     }
 
-    res.json({ status: "success", data: rows[0] });
+    res.json({ status: "success", product: rows[0] });
   } catch (err) {
     res.status(500).json({ status: "error", message: err.message });
   }
@@ -105,6 +115,7 @@ exports.create = async (req, res) => {
     const {
       name,
       barcode,
+      description,
       category_id,
       brand_id,
       supplier_id,
@@ -117,7 +128,7 @@ exports.create = async (req, res) => {
     // ✅ get from validated token — no longer needed in req.body
     const created_by = req.current_id;
 
-    if (!name) {
+if (!name) {
       if (req.file)
         fs.existsSync(req.file.path) && fs.unlinkSync(req.file.path);
       return res
@@ -125,17 +136,19 @@ exports.create = async (req, res) => {
         .json({ status: "error", message: "Name is required" });
     }
 
-    const image = req.file ? req.file.filename : null;
+    // Save image path with products/ prefix for database
+    const image = req.file ? getProductImagePath(req.file.filename) : null;
 
     const [result] = await db.query(
-      `INSERT INTO products 
-      (name, barcode, category_id, brand_id, supplier_id,
+      `INSERT INTO products
+      (name, barcode, description, category_id, brand_id, supplier_id,
       cost_price, selling_price, stock, reorder_level,
       image, created_by)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         name,
         barcode,
+        description,
         category_id,
         brand_id,
         supplier_id,
@@ -161,8 +174,8 @@ exports.create = async (req, res) => {
 };
 
 // ==============================
-// ✏️ UPDATE PRODUCT
-// DB stores: filename only  → e.g. "product-172-48.jpg"
+// UPDATE PRODUCT
+
 // Disk stores: full path    → "public/products/product-172-48.jpg"
 // ==============================
 exports.update = async (req, res) => {
@@ -172,6 +185,7 @@ exports.update = async (req, res) => {
     const {
       name,
       barcode,
+      description,
       category_id,
       brand_id,
       supplier_id,
@@ -197,25 +211,26 @@ exports.update = async (req, res) => {
       });
     }
 
-    // start with the existing filename from DB
+// start with the existing filename from DB
     let image = existing[0].image;
 
     if (req.file) {
-      // ✅ delete old file from disk using filename → full path
+      // delete old file from disk using filename → full path
       deleteImage(image);
-      // ✅ save new filename only into DB
-      image = req.file.filename;
+      // save new filename with products/ prefix into DB
+      image = getProductImagePath(req.file.filename);
     }
 
     await db.query(
       `UPDATE products SET
-      name=?, barcode=?, category_id=?, brand_id=?,
+      name=?, barcode=?, description=?, category_id=?, brand_id=?,
       supplier_id=?, cost_price=?, selling_price=?,
       stock=?, reorder_level=?, image=?, updated_at=NOW()
       WHERE product_id=?`,
       [
         name,
         barcode,
+        description,
         category_id,
         brand_id,
         supplier_id,
@@ -245,7 +260,7 @@ exports.update = async (req, res) => {
 };
 
 // ==============================
-// ❌ DELETE PRODUCT
+//  DELETE PRODUCT
 // ==============================
 exports.remove = async (req, res) => {
   try {
@@ -265,7 +280,7 @@ exports.remove = async (req, res) => {
 
     await db.query("DELETE FROM products WHERE product_id = ?", [id]);
 
-    // ✅ pass filename only — deleteImage builds the full path
+    // pass filename only — deleteImage builds the full path
     deleteImage(rows[0].image);
 
     res.json({

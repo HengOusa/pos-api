@@ -1,0 +1,7 @@
+Error: Unknown column 'updated_at' in 'field list'
+Error: Unknown column 'updated_at' in 'field list'
+Error: Unknown column 'updated_at' in 'field list'
+Error: Unknown column 'updated_at' in 'field list'
+Error: Unknown column 'updated_at' in 'field list'
+Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM customers 
+      WHERE customer_id = '2'' at line 4
